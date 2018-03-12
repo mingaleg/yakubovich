@@ -99,3 +99,12 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# static directory
+/static/
+
+# Pycharm
+/.idea/
+
+# dev db
+db.sqlite3

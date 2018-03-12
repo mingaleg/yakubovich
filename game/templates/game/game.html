@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Yakubovich</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+        #noconnection {
+            display: none;
+            position: fixed;
+            background-color: darkred;
+            color: white;
+            bottom: 40px;
+            right: 40px;
+            font-family: monospace;
+            font-size: 20px;
+            padding: 5px 15px;
+        }
+        #panel {
+            position: absolute;
+            right: 0;
+            top: 0;
+            left: 0;
+            height: 300px;
+            border-bottom: 3px black solid;
+        }
+        #msgs {
+            position: absolute;
+            right: 0;
+            top: 300px;
+            left: 0;
+            bottom: 0;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+        #title {
+            text-align: center;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 20px;
+        }
+        #wall {
+            text-align: center;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 45px;
+            letter-spacing: 10px;
+        }
+        #desc {
+            text-align: justify;
+            padding: 10px 50px;
+            font-family: monospace;
+            font-size: 15px;
+        }
+        #msgs {
+            font-family: monospace;
+            padding: 20px 20px;
+            font-size: 15px;
+        }
+        .wall, .desc, .score {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="msgs">
+        {% for ev in game.events %}
+            <div class="{{ ev.style }}">
+                <span>({{ ev.timestamp|date:'H:i:s' }})</span> {{ ev.text }}
+            </div>
+        {% endfor %}
+    </div>
+    <div id="panel">
+        <div id="title">
+            {{ game.title }}: <span>{{ game.score }}</span>
+        </div>
+        <div id="wall">
+            {{ game.wall }}
+        </div>
+        <div id="desc">
+            {{ game.desc }} <br/>
+            {% if is_teamleader and not game.prevent_guesses %}<a id="guess" href="guess/">Угадать слово</a>{% endif %}
+        </div>
+    </div>
+    <div id="noconnection">
+        <h1>Нет соединения с сервером</h1>
+        <p>Пожалуйста, перезагрузите страницу</p>
+    </div>
+    <script>
+        websocket = new WebSocket("ws://localhost:8001/");
+        websocket.onopen = function(ev) {
+            console.log('Connected');
+            scrollToBottom();
+        };
+        websocket.onclose = function (ev) {
+            $('#noconnection').show();
+        };
+        websocket.onmessage = function (ev) {
+            var data = JSON.parse(ev.data);
+            var date = new Date(data['timestamp']*1000);
+            var hours = "0" + date.getHours();
+            var minutes = "0" + date.getMinutes();
+            var seconds = "0" + date.getSeconds();
+            var formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+
+            if (data['style'] === 'score') {
+                $('#title').find('span').text(data['text']);
+            } else if (data['style'] === 'wall') {
+                $('#wall').text(data['text']);
+            } else if (data['style'] === 'desc') {
+                $('#desc').text(data['text']);
+            } else {
+                $('#msgs').append('<div class="'+data['style']+'"><span>('+formattedTime+')</span> '+data['text']+"</div>");
+            }
+
+            if (data['style'] === 'wall' || data['style'] === 'guess correct') {
+                $('#guess').show();
+            }
+            if (data['style'] === 'guess wrong') {
+                $('#guess').hide();
+            }
+            scrollToBottom();
+        };
+
+        // First, define a helper function.
+        function animateScroll(duration) {
+            var start = document.getElementById('msgs').scrollTop;
+            var end = document.getElementById('msgs').scrollHeight;
+            var change = end - start;
+            var increment = 20;
+            function easeInOut(currentTime, start, change, duration) {
+                // by Robert Penner
+                currentTime /= duration / 2;
+                if (currentTime < 1) {
+                    return change / 2 * currentTime * currentTime + start;
+                }
+                currentTime -= 1;
+                return -change / 2 * (currentTime * (currentTime - 2) - 1) + start;
+            }
+
+            function animate(elapsedTime) {
+                elapsedTime += increment;
+                var position = easeInOut(elapsedTime, start, change, duration);
+                document.getElementById('msgs').scrollTop = position;
+                if (elapsedTime < duration) {
+                    setTimeout(function() {
+                        animate(elapsedTime);
+                    }, increment)
+                }
+            }
+            animate(0);
+        }
+
+        // Here's our main callback function we passed to the observer
+        function scrollToBottom() {
+          var duration = 300; // Or however many milliseconds you want to scroll to last
+          animateScroll(duration);
+        }
+    </script>
+</body>
+</html>

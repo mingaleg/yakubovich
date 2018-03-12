@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>Yakubovich :: Login</title>
+        <style>
+            * {
+                font-family: monospace;
+            }
+            th {
+                text-align: right;
+                width: 1px;
+                white-space: nowrap;
+            }
+            body {
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>yakubovich</h1>
+        <h2>Угадать слово</h2>
+        <form method="post">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <button type="submit">Угадать!</button>
+        </form>
+    </body>
+</html>
