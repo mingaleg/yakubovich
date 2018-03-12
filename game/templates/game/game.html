@@ -87,7 +87,9 @@
         <p>Пожалуйста, перезагрузите страницу</p>
     </div>
     <script>
-        websocket = new WebSocket("ws://localhost:8001/");
+        var ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+        websocket = new WebSocket(ws_scheme + '://' + window.location.host + ":8001/");
+
         websocket.onopen = function(ev) {
             console.log('Connected');
             scrollToBottom();
