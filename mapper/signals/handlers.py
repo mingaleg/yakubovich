@@ -25,7 +25,11 @@ def shout(sender, **kwargs):
     except Problem.DoesNotExist:
         return
 
-    if not History.new(subm.contest_id, subm.prob_id):
+    if not History.new(
+            contest_id=subm.contest_id,
+            prob_id=subm.prob_id,
+            ejudge_id=subm.user_id,
+    ):
         return
 
     try:
