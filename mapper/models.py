@@ -19,3 +19,18 @@ class Problem(models.Model):
             self.prob_id,
             self.chars,
         )
+
+
+class History(models.Model):
+    contest_id = models.PositiveIntegerField()
+    prob_id = models.PositiveIntegerField()
+    ejudge_id = models.PositiveIntegerField()
+
+    @classmethod
+    def new(cls, contest_id, prob_id, ejudge_id):
+        obj, created = cls.objects.get_or_create(
+            contest_id=contest_id,
+            prob_id=prob_id,
+            ejudge_id=ejudge_id,
+        )
+        return created

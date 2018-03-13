@@ -2,7 +2,7 @@ import django.dispatch
 from clerk.signals import new_judged_submission
 from clerk.models import Submission
 from game.models import Player
-from ..models import Problem
+from ..models import Problem, History
 
 
 @django.dispatch.receiver(new_judged_submission, sender=Submission)
@@ -23,6 +23,9 @@ def shout(sender, **kwargs):
             prob_id=subm.prob_id,
         )
     except Problem.DoesNotExist:
+        return
+
+    if not History.new(subm.contest_id, subm.prob_id):
         return
 
     try:
