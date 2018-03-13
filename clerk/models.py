@@ -109,7 +109,7 @@ class Submission(models.Model):
         if not was_judged and self.is_judged():
             new_judged_submission.send_robust(
                 sender=Submission,
-                contest_pk=self.contest.contest_id,
+                contest_pk=self.contest.pk,
                 run_id=self.run_id,
             )
 
