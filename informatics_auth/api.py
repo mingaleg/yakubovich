@@ -13,12 +13,6 @@ class InformaticsApiInvalidPassword(InformaticsApiException):
 
 
 def login(username, password):
-    return {
-        "firstname": username,
-        "lastname": "Fake",
-        "ejudge_id": int(password) if password.isnumeric() else 999999,
-    }
-
     try:
         ret = requests.post(
             LOGIN_URL,

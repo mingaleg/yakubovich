@@ -1,3 +1,5 @@
+from time import sleep
+
 from django.core.management.base import BaseCommand, CommandError
 from ...models import Contest
 
@@ -10,5 +12,6 @@ class Command(BaseCommand):
             while True:
                 for contest in Contest.objects.all():
                     contest.pull_new_submissions()
+                sleep(1)
         except InterruptedError:
             pass
