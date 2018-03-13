@@ -14,8 +14,16 @@ class GameAdmin(admin.ModelAdmin):
         'teamleader',
     ]
 
+    actions = [
+        'start',
+    ]
+
     def players(self, obj):
         return obj.player_set.count()
+
+    def start(self, request, queryset):
+        for x in queryset:
+            x.start()
 
 
 
