@@ -28,5 +28,6 @@ urlpatterns = [
     path('game/', include(game.urls), name="game"),
     path('tools/', include(tools.urls), name="game"),
     path('login/', auth_views.login, name='login'),
+    path('problems/', TemplateView.as_view(template_name='yakubovich/problems.html'), name="index"),
     path('', TemplateView.as_view(template_name='yakubovich/index.html'), name="index"),
 ]
