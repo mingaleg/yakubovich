@@ -16,6 +16,8 @@ class GameAdmin(admin.ModelAdmin):
 
     actions = [
         'start',
+        'reload',
+        'stop',
     ]
 
     def players(self, obj):
@@ -25,6 +27,13 @@ class GameAdmin(admin.ModelAdmin):
         for x in queryset:
             x.start()
 
+    def reload(self, request, queryset):
+        for x in queryset:
+            x.reload()
+
+    def stop(self, request, queryset):
+        for x in queryset:
+            x.end()
 
 
 @admin.register(GameConfig)

@@ -57,8 +57,13 @@
             padding: 20px 20px;
             font-size: 15px;
         }
-        .wall, .desc, .score {
+        .wall, .desc, .score, .reload {
             display: none;
+        }
+        a.disabled {
+            text-decoration-line: line-through;
+            pointer-events: none;
+            cursor: crosshair;
         }
     </style>
 </head>
@@ -79,7 +84,9 @@
         </div>
         <div id="desc">
             {{ game.desc }} <br/>
-            {% if is_teamleader and not game.prevent_guesses %}<a id="guess" href="guess/">Угадать слово</a>{% endif %}
+            {% if is_teamleader %}
+                <a id="guess" class="{% if game.prevent_guesses %}disabled{% endif %}" href="guess/">Угадать слово</a>
+            {% endif %}
         </div>
     </div>
     <div id="noconnection">
@@ -111,15 +118,17 @@
                 $('#wall').text(data['text']);
             } else if (data['style'] === 'desc') {
                 $('#desc').text(data['text']);
+            } else if (data['style'] === 'reload') {
+                location.reload();
             } else {
                 $('#msgs').append('<div class="'+data['style']+'"><span>('+formattedTime+')</span> '+data['text']+"</div>");
             }
 
-            if (data['style'] === 'wall' || data['style'] === 'guess correct') {
-                $('#guess').show();
+            if (data['style'] === 'wall' || data['style'] === 'guess correct' || data['style'] === 'start') {
+                $('#guess').removeClass('disabled');
             }
-            if (data['style'] === 'guess wrong') {
-                $('#guess').hide();
+            if (data['style'] === 'guess wrong' || data['style'] == 'end') {
+                $('#guess').addClass('disabled');
             }
             scrollToBottom();
         };

@@ -83,6 +83,9 @@ class Game(models.Model):
             Event.wrong_guess(self)
             self.change_score(-self.config.wrong_penalty)
 
+    def reload(self):
+        Event.reload(self)
+
     @property
     def desc(self):
         return self.config.words[self.round][1] if self.state == 1 else ""
@@ -282,7 +285,7 @@ class Event(models.Model):
         cls.objects.create(
             game=game,
             text="Игра завершена! Очков: {}".format(game.score),
-            style="start",
+            style="end",
         )
 
     @classmethod
@@ -305,7 +308,7 @@ class Event(models.Model):
     def correct_guess(cls, game):
         cls.objects.create(
             game=game,
-            text="Ну разумеется!".format(),
+            text="Ну разумеется! +{} баллов!".format(game.config.correct_bonus),
             style="guess correct",
         )
 
@@ -313,6 +316,14 @@ class Event(models.Model):
     def wrong_guess(cls, game):
         cls.objects.create(
             game=game,
-            text="Ну что вы такое говорите...".format(),
+            text="Ну что вы такое говорите... -{} баллов!".format(game.config.wrong_penalty),
             style="guess wrong",
+        )
+
+    @classmethod
+    def reload(cls, game):
+        cls.objects.create(
+            game=game,
+            text="## перезагрузка страницы ##",
+            style="reload",
         )
