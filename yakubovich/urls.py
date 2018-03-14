@@ -26,8 +26,9 @@ import tools.urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('game/', include(game.urls), name="game"),
-    path('tools/', include(tools.urls), name="game"),
+    path('tools/', include(tools.urls), name="tools"),
     path('login/', auth_views.login, name='login'),
     path('problems/', TemplateView.as_view(template_name='yakubovich/problems.html'), name="index"),
+    path('rules/', TemplateView.as_view(template_name='yakubovich/rules.html'), name="rules"),
     path('', TemplateView.as_view(template_name='yakubovich/index.html'), name="index"),
 ]

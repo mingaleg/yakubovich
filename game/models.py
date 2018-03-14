@@ -289,7 +289,7 @@ class Event(models.Model):
     def end(cls, game):
         cls.objects.create(
             game=game,
-            text="Игра завершена! Очков: {}".format(game.score),
+            text="Игра завершена! Баллов: {}".format(game.score),
             style="end",
         )
 
