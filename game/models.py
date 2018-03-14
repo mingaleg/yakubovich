@@ -20,6 +20,8 @@ class GameConfig(models.Model):
     guess_mode = models.PositiveIntegerField(choices=GUESS_MODE_CHOICES)
     correct_bonus = models.IntegerField(default=100)
     wrong_penalty = models.IntegerField(default=30)
+    correct_shout_bonus = models.IntegerField(default=5)
+    wrong_shout_bonus = models.IntegerField(default=5)
 
     @property
     def words(self):
@@ -131,6 +133,9 @@ class Game(models.Model):
             self.prevent_guesses = False
             self.save()
             Event.wall(self)
+            self.change_score(self.config.correct_shout_bonus)
+        else:
+            self.change_score(self.config.wrong_shout_bonus)
         if self.wall == hidden:
             self.new_round()
         return len(correct_positions)
@@ -230,13 +235,13 @@ class Event(models.Model):
         if hit:
             cls.objects.create(
                 game=game,
-                text="Откройте букву {}!".format(char),
+                text="Откройте букву {}! +{} баллов".format(char, game.config.correct_shout_bonus),
                 style="shout_result hit",
             )
         else:
             cls.objects.create(
                 game=game,
-                text="Такой буквы здесь нет!".format(char),
+                text="Такой буквы здесь нет! +{} баллов".format(game.config.wrong_shout_bonus),
                 style="shout_result miss",
             )
 
