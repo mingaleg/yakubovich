@@ -249,7 +249,7 @@ class Event(models.Model):
     def new_round(cls, game):
         cls.objects.create(
             game=game,
-            text="Новый раунд",
+            text="Новый раунд! +{} баллов!".format(game.config.correct_bonus),
             style="new_round",
         )
 
@@ -313,7 +313,7 @@ class Event(models.Model):
     def correct_guess(cls, game):
         cls.objects.create(
             game=game,
-            text="Ну разумеется! +{} баллов!".format(game.config.correct_bonus),
+            text="Ну разумеется!",
             style="guess correct",
         )
 
