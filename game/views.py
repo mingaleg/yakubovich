@@ -112,14 +112,40 @@ class StandingsView(StaffRequiredView):
                 'probs': [],
             })
             for p in probs:
-                rows[-1]['probs'].append(
-                    History.objects.filter(
+                cnt = History.objects.filter(
                         prob_id=p.prob_id,
                         contest_id=p.contest_id,
                         ejudge_id__in=eids,
-                    ).count() or ''
-                )
+                    ).count()
+                rows[-1]['probs'].append({
+                    'cnt': cnt or ''
+                })
+        players = []
+        for player in Player.objects.filter(user__is_staff=False):
+            if not player.game:
+                continue
+            oks_hst = History.objects.filter(
+                ejudge_id=player.ejudge_id,
+            )
+            oks = []
+            for ok in oks_hst:
+                oks.append(Problem.objects.get(
+                    contest_id=ok.contest_id,
+                    prob_id=ok.prob_id,
+                ))
+            players.append({
+                'name': player.user.get_full_name(),
+                'game': player.game.title,
+                'oks': len(oks),
+                'probs': []
+            })
+            for prob in probs:
+                players[-1]['probs'].append({
+                    'cnt': '+' if prob in oks else ' '
+                })
+
         return render(request, 'game/standings.html', {
             'problems': probs.values_list('chars', flat=True),
             'rows': rows,
+            'players': players,
         })

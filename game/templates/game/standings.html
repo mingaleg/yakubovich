@@ -23,7 +23,7 @@
     </head>
     <body>
         <h1>yakubovich</h1>
-        <h2>Положение участников</h2>
+        <h2>Положение команд</h2>
         <table>
             <tr>
                 <th>Команда</th>
@@ -43,7 +43,29 @@
                     <td>{{ row.round }}</td>
                     <td>{{ row.wall }}</td>
                     {% for prob in row.probs %}
-                        <td>{{ prob }}</td>
+                        <td>{{ prob.cnt }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Рейтинг участников</h2>
+        <table>
+            <tr>
+                <th>Участник</th>
+                <th>Команда</th>
+                <th>Задач</th>
+                {% for prob in problems %}
+                    <th>{{ prob }}</th>
+                {% endfor %}
+            </tr>
+            {%  for row in players %}
+                <tr>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.game }}</td>
+                    <td>{{ row.oks }}</td>
+                    {% for prob in row.probs %}
+                        <td>{{ prob.cnt }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
