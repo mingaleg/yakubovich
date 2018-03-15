@@ -105,12 +105,13 @@ class StandingsView(StaffRequiredView):
         rows = []
         for game in Game.objects.order_by('-score'):
             eids = Player.objects.filter(game=game).values_list('ejudge_id', flat=True)
+            pcnt = Player.objects.filter(game=game).count()
             rows.append({
                 'name': game.title,
                 'score': game.score,
                 'wall': game.wall,
                 'round': game.round,
-                'players': Player.objects.filter(game=game).count(),
+                'players': pcnt,
                 'probs': [],
             })
             for p in probs:
@@ -121,7 +122,7 @@ class StandingsView(StaffRequiredView):
                     ).count()
                 rows[-1]['probs'].append({
                     'cnt': cnt or '',
-                    'full': cnt == len(eids),
+                    'full': cnt == pcnt,
                 })
         players = []
         for player in Player.objects.filter(user__is_staff=False):
