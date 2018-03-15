@@ -19,6 +19,9 @@
                 text-align: left;
                 text-align: left;
             }
+            td.full {
+                font-weight: bold;
+            }
         </style>
     </head>
     <body>
@@ -65,7 +68,7 @@
                     <td>{{ row.game }}</td>
                     <td>{{ row.oks }}</td>
                     {% for prob in row.probs %}
-                        <td>{{ prob.cnt }}</td>
+                        <td {% if prob.full %}class="full"{% endif %}>{{ prob.cnt }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}

@@ -120,7 +120,8 @@ class StandingsView(StaffRequiredView):
                         ejudge_id__in=eids,
                     ).count()
                 rows[-1]['probs'].append({
-                    'cnt': cnt or ''
+                    'cnt': cnt or '',
+                    'full': cnt == len(eids),
                 })
         players = []
         for player in Player.objects.filter(user__is_staff=False):
