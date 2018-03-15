@@ -116,7 +116,7 @@ class StandingsView(StaffRequiredView):
                         prob_id=p.prob_id,
                         contest_id=p.contest_id,
                         ejudge_id__in=eids,
-                    ).count()
+                    ).count() or ''
                 )
         return render(request, 'game/standings.html', {
             'problems': probs.values_list('chars', flat=True),
