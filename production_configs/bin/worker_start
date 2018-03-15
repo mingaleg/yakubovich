@@ -1,0 +1,19 @@
+#!/bin/bash
+
+NAME="yakubovich worker"                                  # Name of the application
+DJANGODIR=/webapps/yaku/yakubovich             # Django project directory
+USER=yaku                                        # the user to run as
+GROUP=webapps                                     # the group to run as
+DJANGO_SETTINGS_MODULE=yakubovich.settings             # which settings file should Django use
+
+echo "Starting $NAME as `whoami`"
+
+# Activate the virtual environment
+cd $DJANGODIR
+source ../bin/activate
+export DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
+export PYTHONPATH=$DJANGODIR:$PYTHONPATH
+
+# Start your Django Unicorn
+# Programs meant to be run under supervisor should not daemonize themselves (do not use --daemon)
+exec ../bin/python ${DJANGODIR}/manage.py runworker 
