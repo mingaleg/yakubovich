@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Yakubovich :: Standings</title>
+        <style>
+            * {
+                font-family: monospace;
+            }
+            th {
+                text-align: center;
+                width: 1px;
+                white-space: nowrap;
+                padding: 4px;
+            }
+            body {
+                padding: 20px;
+            }
+            td {
+                padding: 6px 3px;
+                text-align: left;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>yakubovich</h1>
+        <h2>Положение участников</h2>
+        <table>
+            <tr>
+                <th>Команда</th>
+                <th>Баллы</th>
+                <th>Слова</th>
+                <th>Текущее</th>
+                {% for prob in problems %}
+                    <th>{{ prob }}</th>
+                {% endfor %}
+            </tr>
+            {%  for row in rows %}
+                <tr>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.score }}</td>
+                    <td>{{ row.round }}</td>
+                    <td>{{ row.wall }}</td>
+                    {% for prob in row.probs %}
+                        <td>{{ prob }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

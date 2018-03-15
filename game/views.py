@@ -2,11 +2,12 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 from django.views.generic import FormView
 
-from .models import Game, Event
+from mapper.models import Problem, History
+from .models import Game, Event, Player
 from .forms import GuessForm
 
 
@@ -88,4 +89,36 @@ class GuessView(LoginRequiredView):
         return render(request, 'game/guess.html', {
             'game': game,
             'form': form,
+        })
+
+class StaffRequiredView(View):
+    @method_decorator(user_passes_test(lambda user: user.is_staff))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+
+class StandingsView(StaffRequiredView):
+    def get(self, request):
+        probs = Problem.objects.order_by('chars')
+        rows = []
+        for game in Game.objects.order_by('-score'):
+            eids = Player.objects.filter(game=game).values_list('ejudge_id', flat=True)
+            rows.append({
+                'name': game.title,
+                'score': game.score,
+                'wall': game.wall,
+                'round': game.round,
+                'probs': [],
+            })
+            for p in probs:
+                rows[-1]['probs'].append(
+                    History.objects.filter(
+                        prob_id=p.prob_id,
+                        contest_id=p.contest_id,
+                        ejudge_id__in=eids,
+                    ).count()
+                )
+        return render(request, 'game/standings.html', {
+            'problems': probs.values_list('chars', flat=True),
+            'rows': rows,
         })
