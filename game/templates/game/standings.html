@@ -46,7 +46,7 @@
                     <td>{{ row.round }}</td>
                     <td>{{ row.wall }}</td>
                     {% for prob in row.probs %}
-                        <td>{{ prob.cnt }}</td>
+                        <td {% if prob.full %}class="full"{% endif %}>{{ prob.cnt }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -68,7 +68,8 @@
                     <td>{{ row.game }}</td>
                     <td>{{ row.oks }}</td>
                     {% for prob in row.probs %}
-                        <td {% if prob.full %}class="full"{% endif %}>{{ prob.cnt }}</td>
+                        {{ prob.full }}
+                        <td>{{ prob.cnt }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
