@@ -1,3 +1,5 @@
+import operator
+
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
@@ -143,6 +145,8 @@ class StandingsView(StaffRequiredView):
                 players[-1]['probs'].append({
                     'cnt': '+' if prob in oks else ' '
                 })
+
+        players.sort(key=operator.itemgetter('oks'), reverse=True)
 
         return render(request, 'game/standings.html', {
             'problems': probs.values_list('chars', flat=True),
