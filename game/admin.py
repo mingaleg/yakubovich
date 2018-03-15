@@ -8,6 +8,8 @@ class GameAdmin(admin.ModelAdmin):
     list_display = [
         'uuid',
         'title',
+        'round',
+        'wall',
         'state',
         'score',
         'players',
@@ -61,5 +63,9 @@ class EventAdmin(admin.ModelAdmin):
     list_display = [
         'style',
         'text',
+        'game',
+    ]
+    list_filter = [
+        'style',
         'game',
     ]
