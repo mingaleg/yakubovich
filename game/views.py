@@ -108,6 +108,7 @@ class StandingsView(StaffRequiredView):
                 'score': game.score,
                 'wall': game.wall,
                 'round': game.round,
+                'players': Player.objects.filter(game=game).count(),
                 'probs': [],
             })
             for p in probs:

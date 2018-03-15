@@ -27,6 +27,7 @@
         <table>
             <tr>
                 <th>Команда</th>
+                <th>Участников</th>
                 <th>Баллы</th>
                 <th>Слова</th>
                 <th>Текущее</th>
@@ -37,6 +38,7 @@
             {%  for row in rows %}
                 <tr>
                     <td>{{ row.name }}</td>
+                    <td>{{ row.players }}</td>
                     <td>{{ row.score }}</td>
                     <td>{{ row.round }}</td>
                     <td>{{ row.wall }}</td>
