@@ -23,6 +23,6 @@ requests==2.18.4
 six==1.11.0
 Twisted==17.9.0
 txaio==2.9.0
-urllib3==1.22
+urllib3==1.26.5
 uuid==1.30
 zope.interface==4.4.3
