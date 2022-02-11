@@ -21,7 +21,7 @@ pytz==2018.3
 redis==2.10.6
 requests==2.18.4
 six==1.11.0
-Twisted==17.9.0
+Twisted==22.1.0
 txaio==2.9.0
 urllib3==1.22
 uuid==1.30
